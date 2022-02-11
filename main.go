@@ -22,9 +22,14 @@ func buildMessage(update tgbotapi.Update, f func(m tgbotapi.MessageConfig)) {
 
 		statusStr := "📊 Servers Status\n\n" +
 			"_Time: " + time.Now().Format("15:04:05") + " (GMT)_ \n\n"
-		for _, server := range s {
-			statusStr += "▪️ " + server.Name + ": " + server.Status + "\n"
+		if len(s) > 0 {
+			for _, server := range s {
+				statusStr += "▪️ " + server.Name + ": " + server.Status + "\n"
+			}
+		} else {
+			statusStr += "❌ Status website down"
 		}
+
 		msg.Text = statusStr
 		msg.ParseMode = tgbotapi.ModeMarkdown
 
@@ -63,7 +68,7 @@ func main() {
 				msg.Text = "To retrieve Lost Ark server status execute /status"
 
 				sendMessage(msg, bot)
-			case "/status":
+			case "/status", "/status@lostartksatus_bot":
 				bot.DeleteMessage(tgbotapi.DeleteMessageConfig{
 					ChatID:    update.Message.Chat.ID,
 					MessageID: update.Message.MessageID,

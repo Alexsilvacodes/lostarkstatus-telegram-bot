@@ -33,6 +33,10 @@ func GetStatus(f func(s []Server)) {
 		servers = append(servers, server)
 	})
 
+	c.OnError(func(_ *colly.Response, err error) {
+		f([]Server{})
+	})
+
 	c.OnScraped(func(r *colly.Response) {
 		sort.Slice(servers, func(i, j int) bool {
 			return servers[i].Name < servers[j].Name
