@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/Alexsilvacodes/LostArkStatus/lostarkstatus"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
 )
 
@@ -51,7 +51,7 @@ func main() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
-	updates, _ := bot.GetUpdatesChan(u)
+	updates := bot.GetUpdatesChan(u)
 
 	for update := range updates {
 		if update.Message == nil && update.CallbackQuery == nil {
@@ -61,7 +61,7 @@ func main() {
 		if update.Message != nil {
 			switch update.Message.Text {
 			case "/start":
-				bot.DeleteMessage(tgbotapi.DeleteMessageConfig{
+				bot.Request(tgbotapi.DeleteMessageConfig{
 					ChatID:    update.Message.Chat.ID,
 					MessageID: update.Message.MessageID,
 				})
@@ -71,7 +71,7 @@ func main() {
 
 				sendMessage(msg, bot)
 			case "/status", "/status@lostartksatus_bot":
-				bot.DeleteMessage(tgbotapi.DeleteMessageConfig{
+				bot.Request(tgbotapi.DeleteMessageConfig{
 					ChatID:    update.Message.Chat.ID,
 					MessageID: update.Message.MessageID,
 				})
